@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mistake Notebook — DSA</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d212b; --border:#2a2f3a;
+    --text:#e8e9ed; --muted:#8b91a0; --accent:#5b8cff; --danger:#ff6b6b;
+    --warn:#ffb454; --good:#4ade80;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--text); font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+    margin:0; padding:24px; line-height:1.5;
+  }
+  h1{font-size:22px; margin:0 0 4px;}
+  .sub{color:var(--muted); font-size:13px; margin-bottom:20px;}
+  .stats{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px;}
+  .stat{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:10px 16px; min-width:90px;}
+  .stat .n{font-size:20px; font-weight:600;}
+  .stat .l{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+  .panel{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:18px;}
+  .panel h2{font-size:15px; margin:0 0 12px;}
+  .row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+  .row > div{flex:1; min-width:160px;}
+  label{font-size:11px; color:var(--muted); display:block; margin-bottom:4px;}
+  input, select, textarea{
+    width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text);
+    border-radius:7px; padding:8px 10px; font-size:13px; font-family:inherit;
+  }
+  textarea{resize:vertical; min-height:50px;}
+  button{
+    background:var(--accent); color:#fff; border:none; border-radius:7px; padding:9px 18px;
+    font-size:13px; font-weight:600; cursor:pointer;
+  }
+  button.secondary{background:transparent; border:1px solid var(--border); color:var(--text);}
+  button.small{padding:5px 10px; font-size:12px;}
+  .controls{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; align-items:center;}
+  .controls input, .controls select{width:auto; min-width:140px;}
+  .entry{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px;}
+  .entry-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .entry-title{font-weight:600; font-size:14px;}
+  .tags{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0;}
+  .tag{font-size:11px; padding:2px 8px; border-radius:20px; border:1px solid var(--border); color:var(--muted);}
+  .tag.topic{color:var(--accent); border-color:var(--accent);}
+  .tag.mtype{color:var(--danger); border-color:var(--danger);}
+  .tag.status-mastered{color:var(--good); border-color:var(--good);}
+  .tag.status-revise{color:var(--warn); border-color:var(--warn);}
+  .field{font-size:13px; margin-top:6px;}
+  .field .k{color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.03em;}
+  .meta{font-size:11px; color:var(--muted); margin-top:8px; display:flex; justify-content:space-between; align-items:center;}
+  .actions{display:flex; gap:6px;}
+  .empty{color:var(--muted); font-size:13px; text-align:center; padding:30px 0;}
+  a.link{color:var(--accent); font-size:12px; text-decoration:none;}
+</style>
+</head>
+<body>
+
+<h1>📓 Mistake Notebook — DSA</h1>
+<div class="sub">Log every mistake. Review before it repeats.</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="panel">
+  <h2>Log a new mistake</h2>
+  <div class="row">
+    <div>
+      <label>Problem name</label>
+      <input id="f-problem" placeholder="e.g. Maximum Subarray">
+    </div>
+    <div>
+      <label>Topic</label>
+      <select id="f-topic">
+        <option>Arrays</option><option>Strings</option><option>Linked List</option>
+        <option>Stack/Queue</option><option>Binary Search</option><option>Recursion</option>
+        <option>Backtracking</option><option>Trees</option><option>Graphs</option>
+        <option>DP</option><option>Greedy</option><option>Heap</option><option>Trie</option>
+        <option>Bit Manipulation</option><option>Math</option><option>Other</option>
+      </select>
+    </div>
+    <div>
+      <label>Mistake type</label>
+      <select id="f-mtype">
+        <option>Wrong approach</option>
+        <option>Edge case missed</option>
+        <option>TLE / wrong complexity</option>
+        <option>Off-by-one / index error</option>
+        <option>Misread problem</option>
+        <option>Syntax / silly bug</option>
+        <option>Didn't know the pattern</option>
+        <option>Overcomplicated</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label>What went wrong</label>
+      <textarea id="f-wrong" placeholder="Describe exactly what you did / thought wrong"></textarea>
+    </div>
+    <div>
+      <label>Correct approach / fix</label>
+      <textarea id="f-fix" placeholder="The right way to think about / solve it"></textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <label>Problem link (optional)</label>
+      <input id="f-link" placeholder="https://leetcode.com/...">
+    </div>
+    <div>
+      <label>Time taken / attempts (optional)</label>
+      <input id="f-time" placeholder="e.g. 40 min, 2 wrong submissions">
+    </div>
+    <div>
+      <label>Status</label>
+      <select id="f-status">
+        <option value="revise">Needs revision</option>
+        <option value="mastered">Mastered now</option>
+      </select>
+    </div>
+  </div>
+  <button onclick="addEntry()">+ Add entry</button>
+</div>
+
+<div class="controls">
+  <input id="search" placeholder="Search problems / notes..." oninput="render()">
+  <select id="filter-topic" onchange="render()"><option value="">All topics</option></select>
+  <select id="filter-status" onchange="render()">
+    <option value="">All status</option>
+    <option value="revise">Needs revision</option>
+    <option value="mastered">Mastered</option>
+  </select>
+  <button class="secondary small" onclick="exportData()">Export JSON</button>
+</div>
+
+<div id="list"></div>
+
+<script>
+let entries = [];
+
+function load(){
+  try{
+    const r = localStorage.getItem('dsa-mistakes');
+    entries = r ? JSON.parse(r) : [];
+  }catch(e){ entries = []; }
+  render();
+}
+
+function save(){
+  try{
+    localStorage.setItem('dsa-mistakes', JSON.stringify(entries));
+  }catch(e){ }
+}
+
+function addEntry(){
+  const problem = document.getElementById('f-problem').value.trim();
+  if(!problem){ alert('Enter a problem name'); return; }
+  const entry = {
+    id: Date.now(),
+    problem,
+    topic: document.getElementById('f-topic').value,
+    mtype: document.getElementById('f-mtype').value,
+    wrong: document.getElementById('f-wrong').value.trim(),
+    fix: document.getElementById('f-fix').value.trim(),
+    link: document.getElementById('f-link').value.trim(),
+    time: document.getElementById('f-time').value.trim(),
+    status: document.getElementById('f-status').value,
+    date: new Date().toISOString().slice(0,10)
+  };
+  entries.unshift(entry);
+  save();
+  ['f-problem','f-wrong','f-fix','f-link','f-time'].forEach(id=>document.getElementById(id).value='');
+  render();
+}
+
+function deleteEntry(id){
+  entries = entries.filter(e=>e.id!==id);
+  save();
+  render();
+}
+
+function toggleStatus(id){
+  const e = entries.find(e=>e.id===id);
+  e.status = e.status === 'revise' ? 'mastered' : 'revise';
+  save();
+  render();
+}
+
+function exportData(){
+  const blob = new Blob([JSON.stringify(entries,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mistake-notebook.json';
+  a.click();
+}
+
+function render(){
+  const search = document.getElementById('search').value.toLowerCase();
+  const ftopic = document.getElementById('filter-topic').value;
+  const fstatus = document.getElementById('filter-status').value;
+
+  const topics = [...new Set(entries.map(e=>e.topic))];
+  const topicSel = document.getElementById('filter-topic');
+  const current = topicSel.value;
+  topicSel.innerHTML = '<option value="">All topics</option>' + topics.map(t=>`<option value="${t}">${t}</option>`).join('');
+  topicSel.value = current;
+
+  let filtered = entries.filter(e=>{
+    if(ftopic && e.topic!==ftopic) return false;
+    if(fstatus && e.status!==fstatus) return false;
+    if(search && !(e.problem.toLowerCase().includes(search) || e.wrong.toLowerCase().includes(search) || e.fix.toLowerCase().includes(search))) return false;
+    return true;
+  });
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="n">${entries.length}</div><div class="l">Total logged</div></div>
+    <div class="stat"><div class="n">${entries.filter(e=>e.status==='revise').length}</div><div class="l">Needs revision</div></div>
+    <div class="stat"><div class="n">${entries.filter(e=>e.status==='mastered').length}</div><div class="l">Mastered</div></div>
+    <div class="stat"><div class="n">${new Set(entries.map(e=>e.topic)).size}</div><div class="l">Topics touched</div></div>
+  `;
+
+  const list = document.getElementById('list');
+  if(filtered.length===0){
+    list.innerHTML = '<div class="empty">No entries yet. Log your first mistake above.</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(e=>`
+    <div class="entry">
+      <div class="entry-top">
+        <div class="entry-title">${escapeHtml(e.problem)}</div>
+        <div class="actions">
+          <button class="secondary small" onclick="toggleStatus(${e.id})">${e.status==='revise' ? 'Mark mastered' : 'Mark for revision'}</button>
+          <button class="secondary small" onclick="deleteEntry(${e.id})">Delete</button>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag topic">${e.topic}</span>
+        <span class="tag mtype">${e.mtype}</span>
+        <span class="tag status-${e.status}">${e.status==='revise'?'Needs revision':'Mastered'}</span>
+      </div>
+      ${e.wrong ? `<div class="field"><div class="k">What went wrong</div>${escapeHtml(e.wrong)}</div>` : ''}
+      ${e.fix ? `<div class="field"><div class="k">Correct approach</div>${escapeHtml(e.fix)}</div>` : ''}
+      <div class="meta">
+        <span>${e.date}${e.time ? ' · ' + escapeHtml(e.time) : ''}</span>
+        ${e.link ? `<a class="link" href="${e.link}" target="_blank">Open problem ↗</a>` : '<span></span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+load();
+</script>
+</body>
+</html>
